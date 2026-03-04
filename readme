@@ -1,3 +1,13 @@
+Calculadora Levantamento de requisitos 03/03/26
+
+- deve permitir inserção de numeros inteiros
+- deve permitir utilizar os 4 principais operadores ( Soma , subtração , multiplicação e divisão)
+- deve apresentar os dados inseridos pelo usuario seguido pelo operador e o resultado correto ex : n1, operador, n2 , = e resultado da operação
+- deve permitir tamanho acima de pelo menos 10 numeros ex: (100000000 - 24434)
+- deve permitir o uso do operador de raiz quadrada 
+
+
+
 Vinícius Seifert Fonceca
 R.A = 21044082-2
 Turma = ESOFT 7S-B

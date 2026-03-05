@@ -1,0 +1,212 @@
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+
+export default function RootLayout() {
+  
+  const[n1, setN1] = useState('');
+  const[n2, setN2] = useState('');
+  type operador = '+' | '-' | '*' | '/' | '@';
+
+  const [operator, setOperator] = useState<operador | null>(null);
+  
+  function recebeNumero(numero: string){
+    setN1((n1)=> n1 + numero);
+  }
+
+  function recebeOperador(simbolo: operador) {
+  if (n1 === '' && n2 === '') return;
+
+  if(simbolo === '@'){
+    const num = parseFloat(n1);
+    if (num<0){
+      setN1 ('Erro');
+    }else{
+      const resultado = Math.sqrt(num);
+      setN1(resultado.toString());
+    }
+    setOperator (null)
+    setN2 ('');
+    return;
+
+  }
+
+  if (n1 === '') {
+    setOperator(simbolo);
+    return;
+  }
+
+  setN2(n1);
+  setOperator(simbolo);
+  setN1('');
+  }
+
+  function calcular(){
+    
+      const num1 = parseFloat(n2);
+      const num2 = parseFloat(n1);
+
+      if(!operator || n1 == '' || n2 == '') return;
+      if (isNaN(num1) || isNaN(num2)) return;
+
+    
+
+      let resultado: number = 0;
+
+      switch (operator){
+        
+        case '+':
+          resultado = num1 + num2;
+          break;
+        
+        case '-':
+          resultado = num1 - num2;
+          break;
+        
+        case '*':
+          resultado = num1 * num2;
+          break;
+        
+        case '/':
+          if(num2 === 0 || num1 === 0){
+            setN1('Erro');
+            setOperator(null);
+            setN2('');
+            return;
+          }
+          resultado = num1 / num2;
+          break;
+
+      }
+
+      setN1(resultado.toString());
+      setOperator(null);
+      setN2('');
+  }
+
+type ButtonProps = {
+  label: string;
+  onPress: () => void;
+  special?: boolean;
+  wide?: boolean;
+};
+
+function CalcButton({ label, onPress, special, wide }: ButtonProps) {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.button,
+        special && styles.specialButton,
+        wide && styles.wideButton
+      ]}
+      onPress={onPress}
+    >
+      <Text style={styles.buttonText}>{label}</Text>
+    </TouchableOpacity>
+  );
+}
+
+function limpar() {
+  setN1('');
+  setN2('');
+  setOperator(null);
+}
+
+// @ é o raiz quadrada 
+return (
+  <View style={styles.container}>
+
+    <Text style={styles.display}>
+      {n1 || '0'}
+    </Text>
+
+    <View style={styles.buttonsContainer}>
+    
+      <View style={styles.row}>
+        <CalcButton label="C" onPress={limpar} />
+        <CalcButton label="/" onPress={() => recebeOperador('/')} />
+        <CalcButton label="*" onPress={() => recebeOperador('*')} />
+        <CalcButton label="-" onPress={() => recebeOperador('-')} />
+        <CalcButton label= {'\u221A'} onPress={() => recebeOperador('@')} />
+      </View>
+
+      <View style={styles.row}>
+        <CalcButton label="7" onPress={() => recebeNumero('7')} />
+        <CalcButton label="8" onPress={() => recebeNumero('8')} />
+        <CalcButton label="9" onPress={() => recebeNumero('9')} />
+        <CalcButton label="+" onPress={() => recebeOperador('+')} />
+      </View>
+
+      <View style={styles.row}>
+        <CalcButton label="4" onPress={() => recebeNumero('4')} />
+        <CalcButton label="5" onPress={() => recebeNumero('5')} />
+        <CalcButton label="6" onPress={() => recebeNumero('6')} />
+        <CalcButton label="=" onPress={calcular} special />
+      </View>
+
+      <View style={styles.row}>
+        <CalcButton label="1" onPress={() => recebeNumero('1')} />
+        <CalcButton label="2" onPress={() => recebeNumero('2')} />
+        <CalcButton label="3" onPress={() => recebeNumero('3')} />
+        <CalcButton label="0" onPress={() => recebeNumero('0')} wide />
+      </View>
+
+    </View>
+  </View>
+);
+}
+
+//--------------------Styles-----------------//
+
+const styles = StyleSheet.create({
+ 
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
+    justifyContent: 'flex-end',
+    padding: 20,
+  },
+  
+  display: {
+    color: '#fff',
+    fontSize: 60,
+    textAlign: 'right',
+  },
+
+buttonsContainer: {
+  marginTop: 20,
+  marginBottom: 30,
+},
+
+row: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: 10,
+},
+
+button: {
+  flex: 1,
+  backgroundColor: '#333',
+  paddingVertical: 20,
+  marginHorizontal: 5,
+  borderRadius: 10,
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+specialButton: {
+  backgroundColor: 'orange',
+},
+
+wideButton: {
+  flex: 2,
+},
+
+buttonText: {
+  color: '#fff',
+  fontSize: 28,
+  fontWeight: 'bold',
+},
+
+});
+
+
